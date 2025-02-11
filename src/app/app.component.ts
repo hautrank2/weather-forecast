@@ -1,12 +1,13 @@
-import { TuiRoot } from "@taiga-ui/core";
+import { TuiRoot, TuiTextfield } from '@taiga-ui/core';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import PageHeaderComponent from './layout/page-header/page-header.component';
+import { PageSubheaderComponent } from './layout/page-subheader/page-subheader.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TuiRoot],
+  imports: [TuiRoot, PageHeaderComponent, TuiTextfield, PageSubheaderComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
   title = 'weather-forecast';
