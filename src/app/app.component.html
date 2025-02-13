@@ -1,16 +1,14 @@
 <tui-root>
   <app-page-header />
-  <div [style.display]="'flex'">
-    <!-- <app-page-sidebar></app-page-sidebar> -->
-    <main tuiNavigationMain>
-      <app-page-subheader
-        compact
-        tuiSubheader
-        [style.position]="'sticky'"
-      ></app-page-subheader>
-      <div class="main-content"></div>
-    </main>
-  </div>
+  <main tuiNavigationMain>
+    <app-page-subheader
+      compact
+      tuiSubheader
+      [style.position]="'sticky'"
+    ></app-page-subheader>
+    <div class="main-content mx-8 my-8">
+      <app-weather-city></app-weather-city>
+    </div>
+  </main>
 </tui-root>
-
 <!-- Ignore this part, it is only here to position drawer inside the example block -->

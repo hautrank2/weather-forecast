@@ -1,0 +1,9 @@
+<tui-textfield iconStart="@tui.search">
+  <label tuiLabel>Enter city</label>
+  <input
+    placeholder="Ex: Hà Nội"
+    tuiTextfield
+    [ngModel]="city()"
+    (ngModelChange)="onChangeCity($event)"
+  />
+</tui-textfield>

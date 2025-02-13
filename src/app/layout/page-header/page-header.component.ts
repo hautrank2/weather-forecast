@@ -3,20 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { tuiAsPortal, TuiPortals } from '@taiga-ui/cdk';
 import {
   TuiAppearance,
-  TuiButton,
   TuiDataList,
   TuiDropdown,
   TuiDropdownService,
   TuiIcon,
   TuiTextfield,
 } from '@taiga-ui/core';
-import {
-  TuiAvatar,
-  TuiBadgeNotification,
-  TuiChevron,
-  TuiFade,
-  TuiTabs,
-} from '@taiga-ui/kit';
+import { TuiAvatar, TuiFade, TuiTabs } from '@taiga-ui/kit';
 import { TuiNavigation } from '@taiga-ui/layout';
 
 const ICON =
@@ -29,9 +22,6 @@ const ICON =
     FormsModule,
     TuiAppearance,
     TuiAvatar,
-    TuiBadgeNotification,
-    TuiButton,
-    TuiChevron,
     TuiDataList,
     TuiDropdown,
     TuiFade,
