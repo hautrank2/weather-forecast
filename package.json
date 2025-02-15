@@ -31,6 +31,8 @@
     "@taiga-ui/kit": "^4.24.0",
     "@taiga-ui/layout": "^4.24.0",
     "@tailwindcss/postcss": "^4.0.6",
+    "angular-svg-icon": "^19.1.1",
+    "material-icons": "^1.13.14",
     "postcss": "^8.5.2",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.0.6",

@@ -9,42 +9,50 @@
 </tui-textfield>
 <div class="grid grid-cols-6 gap-4 mt-8 grid-rows-6" [style.height]="'76vh'">
   <div class="col-span-3 row-span-2">
-    <div tuiCardMedium tuiAppearance="textfield" class="card min-w-full">
-      Main
+    <div
+      tuiCardMedium
+      tuiAppearance="textfield"
+      class="card min-w-full relative"
+      style="
+        background-image: url('/img/bg_weather.jpg');
+        background-size: cover;
+        background-position: center;
+      "
+    >
+      <div class="w-full flex justify-between items-center">
+        <div class="icon flex space-x-2 items-center">
+          <svg-icon name="cloudy" />
+          <h1 class="text-4xl font-semibold">
+            {{ weatherData?.current?.temp_c }} độ C
+          </h1>
+        </div>
+        <div class="extra absolute top-4 right-4">
+          <p>{{ currentTime | date : "medium" }}</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="col-span-1 col-start-1 row-span-2">
-    <div tuiCardMedium tuiAppearance="textfield" class="card min-w-full">
-      BIHAOIFJD
+  @for (infor of oneCardInfors; track $index; let index = $index) {
+  <div [className]="'col-span-1 row-span-2 col-start-' + (index % 3) + 1">
+    <div
+      tuiCardMedium
+      tuiAppearance="textfield"
+      class="card min-w-full block! p-6!"
+    >
+      <span class="infor-icon material-icons text-xl" style="font-size: 40px">{{
+        infor.icon
+      }}</span>
+      <p class="infor-title text-xl! font-medium mt-4">
+        {{ infor.title }}
+      </p>
+      <h3 class="mt-3 font-semibold!">
+        {{ weatherData && infor.getValue(weatherData, infor.dataIndex) }}
+        {{ infor.unit }}
+      </h3>
     </div>
   </div>
-  <div class="col-span-1 col-start-2 row-span-2">
-    <div tuiCardMedium tuiAppearance="textfield" class="card min-w-full">
-      BIHAOIFJD
-    </div>
-  </div>
-  <div class="col-span-1 col-start-3 row-span-2">
-    <div tuiCardMedium tuiAppearance="textfield" class="card min-w-full">
-      BIHAOIFJD
-    </div>
-  </div>
-
-  <div class="col-span-1 col-start-1 row-span-2">
-    <div tuiCardMedium tuiAppearance="textfield" class="card min-w-full">
-      BIHAOIFJD
-    </div>
-  </div>
-  <div class="col-span-1 col-start-2 row-span-2">
-    <div tuiCardMedium tuiAppearance="textfield" class="card min-w-full">
-      BIHAOIFJD
-    </div>
-  </div>
-  <div class="col-span-1 col-start-3 row-span-2">
-    <div tuiCardMedium tuiAppearance="textfield" class="card min-w-full">
-      BIHAOIFJD
-    </div>
-  </div>
+  }
 
   <div class="col-span-3 col-start-4 row-span-3 row-start-1">
     <div tuiCardMedium tuiAppearance="textfield" class="card min-w-full">
