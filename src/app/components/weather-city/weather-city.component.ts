@@ -1,9 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import {
-  Component,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -17,7 +13,7 @@ import {
   WeatherConfig,
   WeatherData,
 } from '../../../models/weather';
-import { TuiCardLarge } from '@taiga-ui/layout';
+import { TuiCardLarge, TuiCardMedium } from '@taiga-ui/layout';
 import { CommonModule, DatePipe } from '@angular/common';
 import { getValueFromPath } from '../../../utils/common';
 import { TuiAvatar } from '@taiga-ui/kit';
@@ -52,6 +48,7 @@ echarts.use([
     TuiTitle,
     NgxEchartsDirective,
     ReactiveFormsModule,
+    TuiCardMedium,
   ],
   templateUrl: './weather-city.component.html',
   styleUrl: './weather-city.component.scss',
