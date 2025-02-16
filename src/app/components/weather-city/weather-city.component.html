@@ -10,7 +10,7 @@
 <div class="grid grid-cols-6 gap-4 mt-8 grid-rows-6" [style.height]="'76vh'">
   <div class="col-span-3 row-span-2">
     <div
-      tuiCardMedium
+      tuiCardLarge
       tuiAppearance="textfield"
       class="card min-w-full relative"
       style="
@@ -23,7 +23,7 @@
         <div class="icon flex space-x-2 items-center">
           <svg-icon name="cloudy" />
           <h1 class="text-4xl font-semibold">
-            {{ weatherData?.current?.temp_c }} độ C
+            {{ weatherData?.current?.temp_c }} °C
           </h1>
         </div>
         <div class="extra absolute top-4 right-4">
@@ -36,13 +36,17 @@
   @for (infor of oneCardInfors; track $index; let index = $index) {
   <div [className]="'col-span-1 row-span-2 col-start-' + (index % 3) + 1">
     <div
-      tuiCardMedium
+      tuiCardLarge
       tuiAppearance="textfield"
       class="card min-w-full block! p-6!"
     >
-      <span class="infor-icon material-icons text-xl" style="font-size: 40px">{{
-        infor.icon
-      }}</span>
+      <tui-avatar appearance="primary">
+        <span
+          class="infor-icon material-icons text-xl"
+          style="font-size: 40px"
+          >{{ infor.icon }}</span
+        >
+      </tui-avatar>
       <p class="infor-title text-xl! font-medium mt-4">
         {{ infor.title }}
       </p>
@@ -55,14 +59,55 @@
   }
 
   <div class="col-span-3 col-start-4 row-span-3 row-start-1">
-    <div tuiCardMedium tuiAppearance="textfield" class="card min-w-full">
-      BIHAOIFJD
+    <div
+      tuiCardLarge
+      tuiAppearance="textfield"
+      class="card min-w-full flex! flex-col"
+    >
+      <header tuiHeader>
+        <h1 tuiTitle class="text-xl! font-semibold!">
+          Nhiệt độ hôm nay
+          <span tuiSubtitle class="text-md!"
+            >Từ đầu ngày 00:00:00 - {{ currentTime | date : "HH:mm:ss" }}</span
+          >
+        </h1>
+      </header>
+      <section class="flex-1 max-h-full">
+        <div echarts [options]="tempChartOptions" class="chart h-full"></div>
+      </section>
     </div>
   </div>
 
   <div class="col-span-3 col-start-4 row-span-3 row-start-4">
-    <div tuiCardMedium tuiAppearance="textfield" class="card min-w-full">
-      BIHAOIFJD
+    <div
+      tuiCardLarge
+      tuiAppearance="textfield"
+      class="card feature-card min-w-full flex! flex-col gap-4!"
+    >
+      <header tuiHeader>
+        <h1 tuiTitle class="text-xl! font-semibold!">
+          Thời tiết trong {{ forecastDays - 1 }} tới
+        </h1>
+      </header>
+      <section class="flex-1 grid grid-cols-2 gap-2 overflow-y-auto">
+        @for (item of featureData(); track $index; let index = $index) {
+        <div
+          class="inner-card feature-day-card col-span-1 p-2 rounded h-full"
+          tuiAppearance="textfield"
+        >
+          <div class="flex space-x-4">
+            <svg-icon name="cloudy" />
+            <div class="feature-info">
+              <p class="text-sm! font-semibold">
+                {{ changeFormat(item.forecast.forecastday[0].date) }}
+              </p>
+              <h4>{{ item.current.temp_c }} °C</h4>
+              <p class="text-sm!">{{ getRain(item) }}</p>
+            </div>
+          </div>
+        </div>
+        }
+      </section>
     </div>
   </div>
 </div>

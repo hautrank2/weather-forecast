@@ -1,3 +1,10 @@
 .card {
   height: 100%;
+  display: block;
+}
+
+.axes {
+  & > * {
+    display: block;
+  }
 }

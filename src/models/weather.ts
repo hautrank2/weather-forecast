@@ -1,6 +1,9 @@
 export interface WeatherData {
   location: Location;
   current: CurrentWeather;
+  forecast: {
+    forecastday: DateWeather[];
+  };
 }
 
 export interface Location {
@@ -46,8 +49,58 @@ export interface CurrentWeather {
   gust_kph: number;
 }
 
+export interface HourWeather extends CurrentWeather {
+  time_epoch: number;
+  time: string;
+  snow_cm: number;
+  will_it_rain: number;
+  chance_of_rain: number;
+  will_it_snow: number;
+  chance_of_snow: number;
+}
+
 export interface WeatherCondition {
   text: string;
   icon: string;
   code: number;
+}
+
+export interface DateWeather {
+  date: string;
+  date_epoch: number;
+  day: DayWeather;
+  astro: AstroData;
+  hour: HourWeather[];
+}
+
+export interface DayWeather {
+  maxtemp_c: number;
+  maxtemp_f: number;
+  mintemp_c: number;
+  mintemp_f: number;
+  avgtemp_c: number;
+  avgtemp_f: number;
+  maxwind_mph: number;
+  maxwind_kph: number;
+  totalprecip_mm: number;
+  totalprecip_in: number;
+  totalsnow_cm: number;
+  avgvis_km: number;
+  avgvis_miles: number;
+  avghumidity: number;
+  daily_will_it_rain: number;
+  daily_chance_of_rain: number;
+  daily_will_it_snow: number;
+  daily_chance_of_snow: number;
+  condition: WeatherCondition;
+  uv: number;
+}
+
+export interface AstroData {
+  sunrise: string;
+  sunset: string;
+  moonrise: string;
+  moonset: string;
+  moon_phase: string;
+  moon_illumination: number;
 }
