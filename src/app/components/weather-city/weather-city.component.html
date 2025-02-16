@@ -1,12 +1,16 @@
-<tui-textfield iconStart="@tui.search">
-  <label tuiLabel>Enter city</label>
-  <input
-    placeholder="Ex: Hà Nội"
-    tuiTextfield
-    [ngModel]="city()"
-    (ngModelChange)="onChangeCity($event)"
-  />
-</tui-textfield>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <tui-textfield iconStart="@tui.search">
+    <label tuiLabel>Enter city</label>
+    <input
+      id="city"
+      formControlName="city"
+      placeholder="Ex: Hà Nội"
+      tuiTextfield
+    />
+  </tui-textfield>
+</form>
+
+<p *ngIf="loading">Loading...</p>
 <div class="grid grid-cols-6 gap-4 mt-8 grid-rows-6" [style.height]="'76vh'">
   <div class="col-span-3 row-span-2">
     <div
@@ -86,7 +90,7 @@
     >
       <header tuiHeader>
         <h1 tuiTitle class="text-xl! font-semibold!">
-          Thời tiết trong {{ forecastDays - 1 }} tới
+          Thời tiết trong {{ forecastDays - 1 }} ngày tới
         </h1>
       </header>
       <section class="flex-1 grid grid-cols-2 gap-2 overflow-y-auto">
