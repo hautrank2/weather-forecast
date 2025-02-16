@@ -4,7 +4,17 @@
     <span tuiFade class="text-xl">WEATHER FORECAST</span>
   </span>
   <hr />
+
+  <form>
+    <tui-select tuiTextfieldSize="s" [formControl]="langForm" class="w-18">
+      <input placeholder="Choose languages" tuiTextfieldLegacy />
+      <tui-data-list-wrapper *tuiDataList [items]="lagOptions" />
+    </tui-select>
+  </form>
+
   <tui-avatar
     src="https://res.cloudinary.com/dhl9sisnc/image/upload/v1739290179/my-self/Hautrank2-avt-mini.jpg"
   />
+
+  <div class="custom-portal"><ng-container #viewContainer /></div>
 </header>

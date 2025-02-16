@@ -6,6 +6,7 @@ import { provideAngularSvgIcon } from 'angular-svg-icon';
 
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { provideTranslateService } from '@ngx-translate/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +16,8 @@ export const appConfig: ApplicationConfig = {
     NG_EVENT_PLUGINS,
     provideHttpClient(),
     provideAngularSvgIcon(),
+    provideTranslateService({
+      defaultLanguage: 'vi'
+     })
   ],
-
 };

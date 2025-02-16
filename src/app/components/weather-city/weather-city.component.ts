@@ -1,24 +1,23 @@
 import { HttpClient } from '@angular/common/http';
 import {
   Component,
-  effect,
-  EffectRef,
-  OnDestroy,
   OnInit,
   signal,
 } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
 import { TuiAppearance, TuiTextfield, TuiTitle } from '@taiga-ui/core';
 import { environment } from '../../../environments/environment';
-import { WeatherData } from '../../../models/weather';
+import {
+  WeatherCondition,
+  WeatherConfig,
+  WeatherData,
+} from '../../../models/weather';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { SvgIconComponent } from 'angular-svg-icon';
 import { CommonModule, DatePipe } from '@angular/common';
 import { getValueFromPath } from '../../../utils/common';
 import { TuiAvatar } from '@taiga-ui/kit';
@@ -32,7 +31,7 @@ import {
 import { CanvasRenderer } from 'echarts/renderers';
 import { LineChart } from 'echarts/charts';
 import { ECBasicOption } from 'echarts/types/dist/shared';
-import { debounce, debounceTime, finalize, forkJoin, Subject, tap } from 'rxjs';
+import { finalize, forkJoin, Subject, tap } from 'rxjs';
 echarts.use([
   LineChart,
   GridComponent,
@@ -47,7 +46,6 @@ echarts.use([
     TuiTextfield,
     FormsModule,
     TuiAppearance,
-    SvgIconComponent,
     CommonModule,
     TuiCardLarge,
     TuiAvatar,
@@ -67,6 +65,7 @@ export class WeatherCityComponent implements OnInit {
   form: FormGroup;
   private searchSubject = new Subject<string>();
   loading: boolean = false;
+  weatherConfig = signal<WeatherConfig[]>([]);
 
   constructor(
     private http: HttpClient,
@@ -81,12 +80,26 @@ export class WeatherCityComponent implements OnInit {
     this.form.get('city')?.valueChanges.subscribe((city) => {
       this.searchSubject.next(city);
     });
+
+    this.http
+      .get<WeatherConfig[]>('https://www.weatherapi.com/docs/conditions.json')
+      .subscribe((res) => {
+        this.weatherConfig.set(res);
+      });
   }
 
   submit() {
     const city = this.form.value['city'];
     localStorage.setItem('dashboard-city', city);
     this.fetchData(city);
+  }
+
+  getWeatherIcon(is_day: 0 | 1, condition?: WeatherCondition): string {
+    return condition
+      ? `https://cdn.weatherapi.com/weather/64x64/${is_day ? 'day' : 'night'}/${
+          condition.code
+        }.png`
+      : 'Not found';
   }
 
   get city() {
@@ -103,11 +116,8 @@ export class WeatherCityComponent implements OnInit {
 
   get tempChartOptions(): ECBasicOption {
     // Create an array from 0 -> current hour Ex: [0, 1, 2, ...10] if current hour is 10
-    const currentHour: number = +(
-      this.datePipe.transform(this.currentTime, 'HH') || 0
-    );
     const xAxisData = [];
-    for (let i = 0; i < currentHour; i++) {
+    for (let i = 0; i < 24; i++) {
       xAxisData.push(`${i + 1}h`);
     }
     const data =

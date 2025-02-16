@@ -25,10 +25,15 @@
     >
       <div class="w-full flex justify-between items-center">
         <div class="icon flex space-x-2 items-center">
-          <svg-icon name="cloudy" />
-          <h1 class="text-4xl font-semibold">
-            {{ weatherData?.current?.temp_c }} °C
-          </h1>
+          <img [src]="weatherData?.current?.condition?.icon" />
+          <div class="block">
+            <h2 class="text-4xl font-semibold">
+              {{ weatherData?.current?.temp_c }} °C
+            </h2>
+            <h3 class="text-4xl font-semibold">
+              {{ weatherData?.current?.condition?.text }}
+            </h3>
+          </div>
         </div>
         <div class="extra absolute top-4 right-4">
           <p>{{ currentTime | date : "medium" }}</p>
@@ -99,9 +104,16 @@
           class="inner-card feature-day-card col-span-1 p-2 rounded h-full"
           tuiAppearance="textfield"
         >
-          <div class="flex space-x-4">
-            <svg-icon name="cloudy" />
-            <div class="feature-info">
+          <div class="grid grid-cols-4 space-x-4">
+            <div class="weather-icon-wrapper col-span-1">
+              <img
+                class="weather-icon"
+                [src]="item.forecast.forecastday[0].day.condition.icon"
+                width="100%"
+                height="auto"
+              />
+            </div>
+            <div class="feature-info col-span-3">
               <p class="text-sm! font-semibold">
                 {{ changeFormat(item.forecast.forecastday[0].date) }}
               </p>

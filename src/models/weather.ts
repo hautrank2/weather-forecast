@@ -22,7 +22,7 @@ export interface CurrentWeather {
   last_updated: string;
   temp_c: number;
   temp_f: number;
-  is_day: number;
+  is_day: 0 | 1;
   condition: WeatherCondition;
   wind_mph: number;
   wind_kph: number;
@@ -103,4 +103,19 @@ export interface AstroData {
   moonset: string;
   moon_phase: string;
   moon_illumination: number;
+}
+
+export interface WeatherConfigLanguague {
+  lang_name: string;
+  lang_iso: string;
+  day_text: string;
+  night_text: string;
+}
+
+export interface WeatherConfig {
+  code: number;
+  day: string;
+  night: string;
+  icon: number;
+  languages: WeatherConfigLanguague[];
 }
