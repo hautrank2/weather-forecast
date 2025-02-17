@@ -26,16 +26,14 @@
               {{ weatherData?.current?.temp_c }} °C
             </h2>
             <h3 class="text-4xl font-semibold">
-              {{ weatherData?.current?.condition?.text }}
+              {{ getConditionText(weatherData?.current?.condition) }}
             </h3>
           </div>
         </div>
-        <div class="extra absolute top-4 right-4">
-          <p>{{ currentTime | date : "medium" }}</p>
-        </div>
+        <div class="extra absolute top-4 right-4"></div>
       </div>
 
-      <div class="grid grid-cols-3 gap-4 mt-4">
+      <div class="grid grid-cols-3 gap-4 mt-6!">
         @for (infor of oneCardInfors; track $index; let index = $index) {
         <div [className]="'col-span-1' + (index % 3) + 1">
           <div tuiCardMedium tuiAppearance="textfield" class="card min-w-full">
@@ -66,6 +64,44 @@
     </div>
   </div>
 
+  <div class="col-span-3 row-span-3">
+    <div
+      tuiCardLarge
+      tuiAppearance="textfield"
+      class="card min-w-full flex! flex-col"
+    >
+      <header tuiHeader>
+        <h1 tuiTitle class="text-xl! font-semibold!">Thời tiết trong ngày</h1>
+      </header>
+      <section class="flex-1 grid grid-cols-3 gap-2 pb-4 overflow-y-auto">
+        @for (hourData of hoursToday.slice(currentHour > 15 ? 15 : currentHour);
+        track $index; let index = $index) {
+        <div
+          class="inner-card feature-day-card col-span-1 p-2 rounded-2xl h-full max-h-18"
+          tuiAppearance="textfield"
+        >
+          <div class="grid grid-cols-4 space-x-4">
+            <div class="weather-icon-wrapper col-span-1">
+              <img
+                class="weather-icon"
+                [src]="hourData.condition.icon"
+                width="100%"
+                height="auto"
+              />
+            </div>
+            <div class="feature-info col-span-3">
+              <p class="text-sm! font-semibold">
+                {{ dateToHour(hourData.time) }}
+              </p>
+              <p class="text-md">{{ getConditionText(hourData.condition) }}</p>
+            </div>
+          </div>
+        </div>
+        }
+      </section>
+    </div>
+  </div>
+
   <div class="col-span-3 col-start-4 row-span-3 row-start-1">
     <div
       tuiCardLarge
@@ -74,10 +110,7 @@
     >
       <header tuiHeader>
         <h1 tuiTitle class="text-xl! font-semibold!">
-          Nhiệt độ hôm nay
-          <span tuiSubtitle class="text-md!"
-            >Từ đầu ngày 00:00:00 - {{ currentTime | date : "HH:mm:ss" }}</span
-          >
+          {{ "home.todayTemp" | translate }}
         </h1>
       </header>
       <section class="flex-1 max-h-full">
@@ -94,7 +127,7 @@
     >
       <header tuiHeader>
         <h1 tuiTitle class="text-xl! font-semibold!">
-          Thời tiết trong {{ forecastDays - 1 }} ngày tới
+          {{ "home.featureWeather" | translate : { day: forecastDays - 1 } }}
         </h1>
       </header>
       <section class="flex-1 grid grid-cols-2 gap-2 overflow-y-auto">
@@ -117,7 +150,7 @@
                 {{ changeFormat(item.forecast.forecastday[0].date) }}
               </p>
               <h4>{{ item.current.temp_c }} °C</h4>
-              <p class="text-sm!">{{ getRain(item) }}</p>
+              <p class="text-sm!">{{ getRain(item) | async }}</p>
             </div>
           </div>
         </div>

@@ -1,0 +1,15 @@
+{
+  "name": "Weather Forecast",
+  "cloud": "Cloud",
+  "uv": "UV",
+  "visibility": "Visibility",
+  "rain": "Rain",
+  "wind": "Wind Speed",
+  "humidity": "Humidity",
+  "noRain": "No rain",
+  "rainTimes": "Rain times",
+  "home": {
+    "todayTemp": "Today's Temperature",
+    "featureWeather": "Weather for the next {{ day }} days"
+  }
+}

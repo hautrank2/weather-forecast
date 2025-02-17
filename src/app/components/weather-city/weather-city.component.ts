@@ -27,7 +27,12 @@ import {
 import { CanvasRenderer } from 'echarts/renderers';
 import { LineChart } from 'echarts/charts';
 import { ECBasicOption } from 'echarts/types/dist/shared';
-import { finalize, forkJoin, Subject, tap } from 'rxjs';
+import { finalize, forkJoin, map, Observable, Subject, take, tap } from 'rxjs';
+import {
+  TranslateDirective,
+  TranslatePipe,
+  TranslateService,
+} from '@ngx-translate/core';
 echarts.use([
   LineChart,
   GridComponent,
@@ -49,6 +54,7 @@ echarts.use([
     NgxEchartsDirective,
     ReactiveFormsModule,
     TuiCardMedium,
+    TranslatePipe,
   ],
   templateUrl: './weather-city.component.html',
   styleUrl: './weather-city.component.scss',
@@ -59,16 +65,26 @@ export class WeatherCityComponent implements OnInit {
   featureData = signal<WeatherData[]>([]);
   readonly formatData = 'yyyy-MM-dd';
   readonly forecastDays = 5; // Number of days for forecast (from today)
+  readonly forecastDaysFromToday = 4; // Number of days for forecast (from today)
   form: FormGroup;
   private searchSubject = new Subject<string>();
   loading: boolean = false;
   weatherConfig = signal<WeatherConfig[]>([]);
+  lang: string = '';
 
   constructor(
     private http: HttpClient,
     private datePipe: DatePipe,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private translate: TranslateService
   ) {
+    this.lang = this.translate.defaultLang; // Get current language
+    console.log(this.translate.defaultLang);
+    this.translate.onLangChange.subscribe((res) => {
+      console.log(res);
+      this.lang = this.translate.currentLang;
+    });
+
     this.form = this.fb.group({
       city: [localStorage.getItem('dashboard-city') || 'Ha Noi'],
     });
@@ -107,8 +123,30 @@ export class WeatherCityComponent implements OnInit {
     return this.data();
   }
 
+  getConditionText(obj?: WeatherCondition): string {
+    if (!obj) return '';
+    if (this.lang === 'en') return obj.text;
+    const defaultText = obj.text;
+    const weatherConfig = this.weatherConfig().find((e) => e.code === obj.code);
+    if (weatherConfig) {
+      const lagObj = weatherConfig.languages.find(
+        (e) => e.lang_iso === this.lang
+      );
+      return lagObj?.day_text || defaultText;
+    }
+    return defaultText;
+  }
+
+  get hoursToday(): any[] {
+    return this.data()?.forecast.forecastday[0].hour || [];
+  }
+
   get currentTime() {
     return new Date();
+  }
+
+  get currentHour() {
+    return new Date().getHours();
   }
 
   get tempChartOptions(): ECBasicOption {
@@ -181,6 +219,10 @@ export class WeatherCityComponent implements OnInit {
     return this.datePipe.transform(new Date(time), 'dd/MM') || '';
   }
 
+  dateToHour(dateTime: string): string {
+    return this.datePipe.transform(new Date(dateTime), 'HH:mm') || '';
+  }
+
   private fetchData(q: string) {
     const observables = [];
     for (let i = 0; i < this.forecastDays; i++) {
@@ -227,7 +269,7 @@ export class WeatherCityComponent implements OnInit {
     this.city.set(newValue);
   }
 
-  getRain(item: WeatherData): string {
+  getRain(item: WeatherData): Observable<string> {
     const hourData = item.forecast.forecastday[0].hour.map((e) => ({
       condition: e.condition,
       time: e.time,
@@ -252,13 +294,18 @@ export class WeatherCityComponent implements OnInit {
       }
     }
 
-    if (result.length === 0) return 'No rain';
-    return `Rain times: ${result
-      .map(([start, end]) => {
-        if (start === end) return `${start}h`;
-        return `${start}h-${end}h`;
-      })
-      .join(', ')}`;
+    if (result.length === 0) return this.translate.get('noRain');
+    return this.translate.get('rainTimes').pipe(
+      map(
+        (res) =>
+          `${res}: ${result
+            .map(([start, end]) => {
+              if (start === end) return `${start}h`;
+              return `${start}h-${end}h`;
+            })
+            .join(', ')}`
+      )
+    );
   }
 
   readonly oneCardInfors = [

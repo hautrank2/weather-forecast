@@ -1,7 +1,7 @@
 <header tuiNavigationHeader>
   <span tuiNavigationLogo>
     <tui-icon icon="@tui.cloud" />
-    <span tuiFade class="text-xl">WEATHER FORECAST</span>
+    <span tuiFade class="text-2xl">{{ "name" | translate }}</span>
   </span>
   <hr />
 
@@ -12,6 +12,11 @@
     </tui-select>
   </form>
 
+  <span tuiNavigationLogo
+    ><span class="text-xl!">{{
+      currentTime | date : "medium" : getLag()
+    }}</span></span
+  >
   <tui-avatar
     src="https://res.cloudinary.com/dhl9sisnc/image/upload/v1739290179/my-self/Hautrank2-avt-mini.jpg"
   />

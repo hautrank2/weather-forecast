@@ -5,6 +5,7 @@ import { PageSubheaderComponent } from './layout/page-subheader/page-subheader.c
 import { WeatherCityComponent } from './components/weather-city/weather-city.component';
 import { SvgIconRegistryService } from 'angular-svg-icon';
 import { TranslateService } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -20,10 +21,13 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AppComponent {
   title = 'weather-forecast';
+  readonly prefix = '/assets/i18n/';
+  readonly suffix = '.json';
 
   constructor(
     private iconReg: SvgIconRegistryService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private http: HttpClient
   ) {
     if (this.iconReg && this.iconReg.loadSvg) {
       this.iconReg
@@ -31,7 +35,7 @@ export class AppComponent {
         ?.subscribe();
     }
 
-    this.translate.addLangs(['En', 'Vi']);
-    this.translate.setDefaultLang(localStorage.getItem('lang') || 'En');
+    this.translate.addLangs(['en', 'vi']);
+    this.translate.setDefaultLang(localStorage.getItem('lang') || 'en');
   }
 }

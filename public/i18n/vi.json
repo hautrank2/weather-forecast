@@ -1,0 +1,15 @@
+{
+  "name": "Dự báo thời tiết",
+  "cloud": "Mây",
+  "uv": "UV",
+  "visibility": "Tầm nhìn",
+  "rain": "Mưa",
+  "wind": "Tốc độ gió",
+  "humidity": "Độ ẩm",
+  "noRain": "Không mưa",
+  "rainTimes": "Thời gian mưa",
+  "home": {
+    "todayTemp": "Nhiệt độ hôm nay",
+    "featureWeather": "Thời tiết trong {{ day }} ngày tới"
+  }
+}
