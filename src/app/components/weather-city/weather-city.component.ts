@@ -1,3 +1,4 @@
+import { SettingService } from './../../services/setting.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, signal } from '@angular/core';
 import {
@@ -9,6 +10,7 @@ import {
 import { TuiAppearance, TuiTextfield, TuiTitle } from '@taiga-ui/core';
 import { environment } from '../../../environments/environment';
 import {
+  CurrentWeather,
   WeatherCondition,
   WeatherConfig,
   WeatherData,
@@ -28,11 +30,9 @@ import { CanvasRenderer } from 'echarts/renderers';
 import { LineChart } from 'echarts/charts';
 import { ECBasicOption } from 'echarts/types/dist/shared';
 import { finalize, forkJoin, map, Observable, Subject, take, tap } from 'rxjs';
-import {
-  TranslateDirective,
-  TranslatePipe,
-  TranslateService,
-} from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TuiChip } from '@taiga-ui/kit';
+
 echarts.use([
   LineChart,
   GridComponent,
@@ -55,6 +55,7 @@ echarts.use([
     ReactiveFormsModule,
     TuiCardMedium,
     TranslatePipe,
+    TuiChip,
   ],
   templateUrl: './weather-city.component.html',
   styleUrl: './weather-city.component.scss',
@@ -76,12 +77,11 @@ export class WeatherCityComponent implements OnInit {
     private http: HttpClient,
     private datePipe: DatePipe,
     private fb: FormBuilder,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private settingService: SettingService
   ) {
     this.lang = this.translate.defaultLang; // Get current language
-    console.log(this.translate.defaultLang);
     this.translate.onLangChange.subscribe((res) => {
-      console.log(res);
       this.lang = this.translate.currentLang;
     });
 
@@ -156,8 +156,9 @@ export class WeatherCityComponent implements OnInit {
       xAxisData.push(`${i + 1}h`);
     }
     const data =
-      this.data()?.forecast.forecastday[0]?.hour.map((item) => item.temp_c) ||
-      [];
+      this.data()?.forecast.forecastday[0]?.hour.map((item) =>
+        this.settingService.tempUnit === '°C' ? item.temp_c : item.temp_f
+      ) || [];
 
     return {
       tooltip: {
@@ -177,7 +178,7 @@ export class WeatherCityComponent implements OnInit {
       },
       yAxis: {
         axisLabel: {
-          formatter: '{value} °C',
+          formatter: `{value} ${this.settingService.tempUnit}`,
         },
       },
       series: [
@@ -213,6 +214,13 @@ export class WeatherCityComponent implements OnInit {
       ],
       animationEasing: 'elasticOut',
     };
+  }
+
+  getTemp(_data?: CurrentWeather): string {
+    if (!_data) return 'No data';
+    const unit = this.settingService.tempUnit;
+    const value = unit === '°C' ? _data.temp_c : _data.temp_f;
+    return `${value} ${unit}`;
   }
 
   changeFormat(time: string): string {
@@ -269,7 +277,7 @@ export class WeatherCityComponent implements OnInit {
     this.city.set(newValue);
   }
 
-  getRain(item: WeatherData): Observable<string> {
+  getRain(item: WeatherData): [number, number][] {
     const hourData = item.forecast.forecastday[0].hour.map((e) => ({
       condition: e.condition,
       time: e.time,
@@ -294,18 +302,10 @@ export class WeatherCityComponent implements OnInit {
       }
     }
 
-    if (result.length === 0) return this.translate.get('noRain');
-    return this.translate.get('rainTimes').pipe(
-      map(
-        (res) =>
-          `${res}: ${result
-            .map(([start, end]) => {
-              if (start === end) return `${start}h`;
-              return `${start}h-${end}h`;
-            })
-            .join(', ')}`
-      )
-    );
+    return result.map(([start, end]) => {
+      if (start === end) return [start, start];
+      return [start, end];
+    });
   }
 
   readonly oneCardInfors = [

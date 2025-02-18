@@ -1,3 +1,4 @@
+import { SettingService } from './../../services/setting.service';
 import { DatePipe } from '@angular/common';
 import {
   AfterViewInit,
@@ -6,10 +7,9 @@ import {
   Component,
   OnDestroy,
   OnInit,
-  signal,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { tuiAsPortal, TuiPortals } from '@taiga-ui/cdk';
 import {
   TuiAppearance,
@@ -58,26 +58,41 @@ export default class PageHeaderComponent
 {
   lang: string = '';
   langForm = new FormControl<string | null>(null);
+  tempUnitForm = new FormControl<string | null>(null);
   currentTime = new Date();
   timeOutId: any;
+  mode: string = '';
+  modeTimeOut: any;
 
   constructor(
-    private translateService: TranslateService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private settingService: SettingService
   ) {
     super();
 
-    this.langForm.setValue(this.translateService.getDefaultLang());
+    this.langForm.setValue(this.settingService.locale);
     this.langForm.valueChanges.subscribe((lag) => {
       if (lag) {
-        this.translateService.use(lag);
-        localStorage.setItem('lang', lag);
+        this.settingService.changeLocale(lag);
       }
     });
+
+    this.tempUnitForm.setValue(this.settingService.tempUnit);
+    this.tempUnitForm.valueChanges.subscribe((value) => {
+      if (value) {
+        this.settingService.changeTempUnit(value);
+      }
+    });
+
+    this.mode = this.settingService.theme;
   }
 
   get lagOptions() {
     return ['vi', 'en'];
+  }
+
+  get tempUnitOptions() {
+    return ['°C', '°F'];
   }
 
   get lag() {
@@ -99,5 +114,11 @@ export default class PageHeaderComponent
 
   ngOnDestroy(): void {
     clearTimeout(this.timeOutId);
+    clearTimeout(this.modeTimeOut);
+  }
+
+  onChangeMode() {
+    this.mode = this.mode === 'light' ? 'dark' : 'light';
+    this.settingService.changeTheme(this.mode);
   }
 }

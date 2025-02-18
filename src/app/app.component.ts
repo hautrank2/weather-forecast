@@ -6,6 +6,7 @@ import { WeatherCityComponent } from './components/weather-city/weather-city.com
 import { SvgIconRegistryService } from 'angular-svg-icon';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
+import { SettingService } from './services/setting.service';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,8 @@ export class AppComponent {
   constructor(
     private iconReg: SvgIconRegistryService,
     private translate: TranslateService,
-    private http: HttpClient
+    private http: HttpClient,
+    private settingService: SettingService
   ) {
     if (this.iconReg && this.iconReg.loadSvg) {
       this.iconReg
@@ -36,6 +38,13 @@ export class AppComponent {
     }
 
     this.translate.addLangs(['en', 'vi']);
-    this.translate.setDefaultLang(localStorage.getItem('lang') || 'en');
+    this.translate.setDefaultLang(this.settingService.locale);
+    this.settingService.changeLocale$.subscribe((lag) => {
+      this.translate.use(lag);
+    });
+  }
+
+  get theme() {
+    return this.settingService.theme;
   }
 }

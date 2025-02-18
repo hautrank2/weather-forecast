@@ -5,11 +5,29 @@
   </span>
   <hr />
 
-  <form>
+  <form class="flex space-x-2 items-center">
     <tui-select tuiTextfieldSize="s" [formControl]="langForm" class="w-18">
       <input placeholder="Choose languages" tuiTextfieldLegacy />
       <tui-data-list-wrapper *tuiDataList [items]="lagOptions" />
     </tui-select>
+
+    <tui-select tuiTextfieldSize="s" [formControl]="tempUnitForm" class="w-18">
+      <input placeholder="Choose temporary" tuiTextfieldLegacy />
+      <tui-data-list-wrapper *tuiDataList [items]="tempUnitOptions" />
+    </tui-select>
+
+    <button
+      appearance="outline"
+      size="xxs"
+      tuiIconButton
+      type="button"
+      (click)="onChangeMode()"
+      tuiTheme="dark"
+    >
+      <span class="material-icons">{{
+        mode === "dark" ? "dark_mode" : "light_mode"
+      }}</span>
+    </button>
   </form>
 
   <span tuiNavigationLogo

@@ -6,6 +6,7 @@
   "rain": "Rain",
   "wind": "Wind Speed",
   "humidity": "Humidity",
+  "rainTime": "Rain time",
   "noRain": "No rain",
   "rainTimes": "Rain times",
   "home": {

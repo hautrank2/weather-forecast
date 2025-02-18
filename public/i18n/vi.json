@@ -6,6 +6,7 @@
   "rain": "Mưa",
   "wind": "Tốc độ gió",
   "humidity": "Độ ẩm",
+  "rainTime": "Giờ mưa",
   "noRain": "Không mưa",
   "rainTimes": "Thời gian mưa",
   "home": {

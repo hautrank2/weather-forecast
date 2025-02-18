@@ -23,7 +23,7 @@
           <img [src]="weatherData?.current?.condition?.icon" />
           <div class="block">
             <h2 class="text-4xl font-semibold">
-              {{ weatherData?.current?.temp_c }} °C
+              {{ getTemp(weatherData?.current) }}
             </h2>
             <h3 class="text-4xl font-semibold">
               {{ getConditionText(weatherData?.current?.condition) }}
@@ -150,7 +150,14 @@
                 {{ changeFormat(item.forecast.forecastday[0].date) }}
               </p>
               <h4>{{ item.current.temp_c }} °C</h4>
-              <p class="text-sm!">{{ getRain(item) | async }}</p>
+              <p class="text-sm!">
+                {{ "rainTime" | translate }}
+                @for (rain of getRain(item); track $index) {
+                <tui-chip size="xxs" class="mx-1 my-1"
+                  >{{ rain[0] }} - {{ rain[1] }}</tui-chip
+                >
+                }
+              </p>
             </div>
           </div>
         </div>

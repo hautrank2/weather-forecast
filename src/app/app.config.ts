@@ -15,6 +15,7 @@ import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import localeVi from '@angular/common/locales/vi';
 import { registerLocaleData } from '@angular/common';
+import { SettingService } from './services/setting.service';
 registerLocaleData(localeVi); // Register Vietnamese locale
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (
@@ -37,6 +38,10 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     importProvidersFrom(),
-    { provide: LOCALE_ID, useValue: 'vi' },
+    {
+      provide: LOCALE_ID,
+      deps: [SettingService],
+      useFactory: (settingService: SettingService) => settingService.locale,
+    },
   ],
 };
