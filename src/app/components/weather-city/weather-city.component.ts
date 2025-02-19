@@ -32,6 +32,7 @@ import { ECBasicOption } from 'echarts/types/dist/shared';
 import { finalize, forkJoin, map, Observable, Subject, take, tap } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TuiChip } from '@taiga-ui/kit';
+import { LocationSearchComponent } from '../location-search/location-search.component';
 
 echarts.use([
   LineChart,
@@ -56,6 +57,7 @@ echarts.use([
     TuiCardMedium,
     TranslatePipe,
     TuiChip,
+    LocationSearchComponent,
   ],
   templateUrl: './weather-city.component.html',
   styleUrl: './weather-city.component.scss',
@@ -67,11 +69,11 @@ export class WeatherCityComponent implements OnInit {
   readonly formatData = 'yyyy-MM-dd';
   readonly forecastDays = 5; // Number of days for forecast (from today)
   readonly forecastDaysFromToday = 4; // Number of days for forecast (from today)
-  form: FormGroup;
   private searchSubject = new Subject<string>();
   loading: boolean = false;
   weatherConfig = signal<WeatherConfig[]>([]);
   lang: string = '';
+  city: string = localStorage.getItem('dashboard-city') || 'Ha Noi';
 
   constructor(
     private http: HttpClient,
@@ -85,14 +87,7 @@ export class WeatherCityComponent implements OnInit {
       this.lang = this.translate.currentLang;
     });
 
-    this.form = this.fb.group({
-      city: [localStorage.getItem('dashboard-city') || 'Ha Noi'],
-    });
-
-    this.fetchData(this.form.value['city']);
-    this.form.get('city')?.valueChanges.subscribe((city) => {
-      this.searchSubject.next(city);
-    });
+    this.fetchData(this.city);
 
     this.http
       .get<WeatherConfig[]>('https://www.weatherapi.com/docs/conditions.json')
@@ -101,9 +96,7 @@ export class WeatherCityComponent implements OnInit {
       });
   }
 
-  submit() {
-    const city = this.form.value['city'];
-    localStorage.setItem('dashboard-city', city);
+  onChangeCity(city: string) {
     this.fetchData(city);
   }
 
@@ -113,10 +106,6 @@ export class WeatherCityComponent implements OnInit {
           condition.code
         }.png`
       : 'Not found';
-  }
-
-  get city() {
-    return this.form.get('city')?.value;
   }
 
   get weatherData() {
@@ -233,6 +222,7 @@ export class WeatherCityComponent implements OnInit {
 
   private fetchData(q: string) {
     const observables = [];
+    localStorage.setItem('dashboard-city', q);
     for (let i = 0; i < this.forecastDays; i++) {
       const today = new Date();
       const featureDay = new Date(today);
@@ -272,10 +262,6 @@ export class WeatherCityComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-
-  onChangeCity(newValue: string) {
-    this.city.set(newValue);
-  }
 
   getRain(item: WeatherData): [number, number][] {
     const hourData = item.forecast.forecastday[0].hour.map((e) => ({

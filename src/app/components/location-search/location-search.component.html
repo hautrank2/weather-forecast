@@ -1,0 +1,25 @@
+<form class="container" [formGroup]="form" (ngSubmit)="onSubmit($event)">
+  <tui-input
+    *tuiLet="locations$ | async as locations"
+    formControlName="location"
+  >
+    Location
+    <input placeholder="Type your name or surname" tuiTextfieldLegacy />
+    <ng-container *ngIf="locations?.length">
+      <tui-data-list *tuiDataList>
+        @for (location of locations; track location.id) {
+        <button
+          tuiOption
+          type="button"
+          [value]="location.name.toString()"
+          (click)="onSelected(location)"
+        >
+          {{ location.name }}
+        </button>
+        }
+      </tui-data-list>
+    </ng-container>
+  </tui-input>
+
+  <button type="submit" style="visibility: hidden">Submit</button>
+</form>

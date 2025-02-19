@@ -1,14 +1,7 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <tui-textfield iconStart="@tui.search">
-    <label tuiLabel>Enter city</label>
-    <input
-      id="city"
-      formControlName="city"
-      placeholder="Ex: Hà Nội"
-      tuiTextfield
-    />
-  </tui-textfield>
-</form>
+<app-location-search
+  [defaultValue]="city"
+  (onChangeValue)="onChangeCity($event)"
+></app-location-search>
 
 <p *ngIf="loading">Loading...</p>
 <div class="grid grid-cols-6 gap-4 mt-8 grid-rows-6" [style.height]="'76vh'">
