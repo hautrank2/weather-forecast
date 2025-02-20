@@ -29,7 +29,7 @@
         <div class="extra absolute top-4 right-4"></div>
       </div>
 
-      <div class="grid grid-cols-3 gap-4 mt-6!">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6!">
         @for (infor of oneCardInfors; track $index; let index = $index) {
         <div [className]="'col-span-1' + (index % 3) + 1">
           <div tuiCardMedium tuiAppearance="textfield" class="card min-w-full">
@@ -71,7 +71,7 @@
           {{ "home.todayTemp" | translate }}
         </h1>
       </header>
-      <section class="flex-1" style="min-height: 300px;">
+      <section class="flex-1" style="min-height: 300px">
         <div echarts [options]="tempChartOptions" class="chart h-full"></div>
       </section>
     </div>
@@ -86,7 +86,9 @@
       <header tuiHeader>
         <h1 tuiTitle class="text-xl! font-semibold!">Thời tiết trong ngày</h1>
       </header>
-      <section class="flex-1 grid grid-cols-3 gap-2 pb-4 overflow-y-auto">
+      <section
+        class="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 pb-4 overflow-y-auto"
+      >
         @for (hourData of hoursToday.slice(currentHour > 15 ? 15 : currentHour);
         track $index; let index = $index) {
         <div
