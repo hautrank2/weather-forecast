@@ -26,6 +26,7 @@ import {
   LegendComponent,
   TooltipComponent,
 } from 'echarts/components';
+import { ILocation } from '../../../models/location';
 import { CanvasRenderer } from 'echarts/renderers';
 import { LineChart } from 'echarts/charts';
 import { ECBasicOption } from 'echarts/types/dist/shared';
@@ -69,11 +70,10 @@ export class WeatherCityComponent implements OnInit {
   readonly formatData = 'yyyy-MM-dd';
   readonly forecastDays = 5; // Number of days for forecast (from today)
   readonly forecastDaysFromToday = 4; // Number of days for forecast (from today)
-  private searchSubject = new Subject<string>();
   loading: boolean = false;
   weatherConfig = signal<WeatherConfig[]>([]);
   lang: string = '';
-  city: string = localStorage.getItem('dashboard-city') || 'Ha Noi';
+  city: string = '';
 
   constructor(
     private http: HttpClient,
@@ -86,8 +86,12 @@ export class WeatherCityComponent implements OnInit {
     this.translate.onLangChange.subscribe((res) => {
       this.lang = this.translate.currentLang;
     });
-
-    this.fetchData(this.city);
+    const q = JSON.parse(localStorage.getItem('dashboard-city') || '"Ha Noi"');
+    this.city =
+      typeof q !== 'string' && 'lat' in q && 'lon' in q
+        ? q['name']
+        : q;
+    this.onChangeCity(this.city);
 
     this.http
       .get<WeatherConfig[]>('https://www.weatherapi.com/docs/conditions.json')
@@ -96,8 +100,8 @@ export class WeatherCityComponent implements OnInit {
       });
   }
 
-  onChangeCity(city: string) {
-    this.fetchData(city);
+  onChangeCity(value: string | ILocation) {
+    this.fetchData(value);
   }
 
   getWeatherIcon(is_day: 0 | 1, condition?: WeatherCondition): string {
@@ -110,6 +114,13 @@ export class WeatherCityComponent implements OnInit {
 
   get weatherData() {
     return this.data();
+  }
+
+  getLocationString(q: string | ILocation) {
+    return (q =
+      typeof q !== 'string' && 'lat' in q && 'lon' in q
+        ? `${q.lat},${q.lon}`
+        : q);
   }
 
   getConditionText(obj?: WeatherCondition): string {
@@ -220,9 +231,10 @@ export class WeatherCityComponent implements OnInit {
     return this.datePipe.transform(new Date(dateTime), 'HH:mm') || '';
   }
 
-  private fetchData(q: string) {
+  private fetchData(_q: string | ILocation) {
+    const q = this.getLocationString(_q);
+    console.log(_q);
     const observables = [];
-    localStorage.setItem('dashboard-city', q);
     for (let i = 0; i < this.forecastDays; i++) {
       const today = new Date();
       const featureDay = new Date(today);
@@ -256,6 +268,7 @@ export class WeatherCityComponent implements OnInit {
               }
             });
           }
+          localStorage.setItem('dashboard-city', JSON.stringify(_q));
           this.featureData.set(featureData);
         },
       });
