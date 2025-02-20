@@ -4,8 +4,11 @@
 ></app-location-search>
 
 <p *ngIf="loading">Loading...</p>
-<div class="grid grid-cols-6 gap-4 grid-rows-6" [style.height]="'76vh'">
-  <div class="col-span-3 row-span-3">
+<div
+  class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4"
+  [style.height]="'76vh'"
+>
+  <div class="col-span-1">
     <div
       tuiCardLarge
       tuiAppearance="textfield"
@@ -57,7 +60,24 @@
     </div>
   </div>
 
-  <div class="col-span-3 row-span-3">
+  <div class="col-span-1">
+    <div
+      tuiCardLarge
+      tuiAppearance="textfield"
+      class="card min-w-full flex! flex-col"
+    >
+      <header tuiHeader>
+        <h1 tuiTitle class="text-xl! font-semibold!">
+          {{ "home.todayTemp" | translate }}
+        </h1>
+      </header>
+      <section class="flex-1" style="min-height: 300px;">
+        <div echarts [options]="tempChartOptions" class="chart h-full"></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="col-span-1">
     <div
       tuiCardLarge
       tuiAppearance="textfield"
@@ -95,24 +115,7 @@
     </div>
   </div>
 
-  <div class="col-span-3 col-start-4 row-span-3 row-start-1">
-    <div
-      tuiCardLarge
-      tuiAppearance="textfield"
-      class="card min-w-full flex! flex-col"
-    >
-      <header tuiHeader>
-        <h1 tuiTitle class="text-xl! font-semibold!">
-          {{ "home.todayTemp" | translate }}
-        </h1>
-      </header>
-      <section class="flex-1 max-h-full">
-        <div echarts [options]="tempChartOptions" class="chart h-full"></div>
-      </section>
-    </div>
-  </div>
-
-  <div class="col-span-3 col-start-4 row-span-3 row-start-4">
+  <div class="col-span-1">
     <div
       tuiCardLarge
       tuiAppearance="textfield"

@@ -1,4 +1,4 @@
-<form class="container" [formGroup]="form" (ngSubmit)="onSubmit($event)">
+<form class="container w-full" [formGroup]="form" (ngSubmit)="onSubmit($event)">
   <tui-input
     *tuiLet="locations$ | async as locations"
     formControlName="location"

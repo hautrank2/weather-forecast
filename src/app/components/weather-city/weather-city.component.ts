@@ -88,9 +88,7 @@ export class WeatherCityComponent implements OnInit {
     });
     const q = JSON.parse(localStorage.getItem('dashboard-city') || '"Ha Noi"');
     this.city =
-      typeof q !== 'string' && 'lat' in q && 'lon' in q
-        ? q['name']
-        : q;
+      typeof q !== 'string' && 'lat' in q && 'lon' in q ? q['name'] : q;
     this.onChangeCity(this.city);
 
     this.http
