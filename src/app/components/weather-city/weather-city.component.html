@@ -71,7 +71,7 @@
           {{ "home.todayTemp" | translate }}
         </h1>
       </header>
-      <section class="flex-1" style="min-height: 300px">
+      <section class="flex-1" style="min-height: 280px">
         <div echarts [options]="tempChartOptions" class="chart h-full"></div>
       </section>
     </div>
@@ -88,6 +88,7 @@
       </header>
       <section
         class="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 pb-4 overflow-y-auto"
+        style="max-height: 230px"
       >
         @for (hourData of hoursToday.slice(currentHour > 15 ? 15 : currentHour);
         track $index; let index = $index) {
