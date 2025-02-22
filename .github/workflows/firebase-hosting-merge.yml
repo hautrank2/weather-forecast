@@ -11,11 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install globally Angular CLI
-        run: npm install -g @angular/cli
 
-      - name: Install packages
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
       - run: npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
@@ -24,3 +22,11 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_WEATHER_FORECAST_35F17 }}
           channelId: live
           projectId: weather-forecast-35f17
+          if: success()
+      - name: Report success
+        if: success()
+        run: echo "Deployment successful!"
+
+      - name: Report failure
+        if: failure()
+        run: echo "Deployment failed! Check logs for details."

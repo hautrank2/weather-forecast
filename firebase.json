@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/weather-forecast",
+    "public": "dist/weather-forecast/browser",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
